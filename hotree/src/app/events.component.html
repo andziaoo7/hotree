@@ -1,0 +1,201 @@
+<header class="header">
+  <h1 class="container">New event</h1>
+</header>
+<div class="container">
+  <div *ngIf="!addedSuccessfully"
+       class="confirmation-container">
+    <h3 class="confirmation-header">Success</h3>
+    <p class="confirmation-description">Event has been created.</p>
+  </div>
+  <form [formGroup]="eventForm" 
+        class="row"
+        (ngSubmit)="submitEvent(eventForm)">
+    <section class="form-section">
+      <h3 class="form-header">About</h3>
+      <div class="form-group increase-space"
+           [ngClass]="{'has-error': eventForm.controls['title'].errors.required && eventForm.controls['title'].touched}">
+        <label for="title">Title
+          <i class="fas fa-asterisk is-required"></i>
+        </label>          
+        <input id="title"
+                class="form-control form-input"
+                type="text"
+                formControlName="title"
+                placeholder="Make it short and clear"
+                required>
+        <div *ngIf="eventForm.controls['title'].errors.required && eventForm.controls['title'].touched"
+             class="has-error-popup">
+          <p class="has-error-message">Title cannot be empty</p>
+        </div>
+      </div>
+      <div class="form-group event-description-group"
+           [ngClass]="{'has-error': eventForm.controls['eventDescription'].errors.required && eventForm.controls['eventDescription'].touched}">
+        <label for="eventDescription"
+                class="description-label">Description
+          <i class="fas fa-asterisk is-required"></i>
+        </label>          
+        <textarea id="eventDescription"
+                  formControlName="eventDescription"
+                  placeholder="Write about your event, be creative"
+                  maxlength="140"
+                  rows="5"
+                  cols="60"
+                  required></textarea>
+        <div *ngIf="eventForm.controls['eventDescription'].errors.required && eventForm.controls['eventDescription'].touched"
+             class="has-error-popup">
+          <p class="has-error-message">Description cannot be empty</p>
+        </div>
+        <div class="description-information">
+          <p class="information-text">Max length 140 characters</p>
+          <p class="information-text">0/140</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="categories"
+                class="form-control"
+                formControlName="category"
+                value="Select category"
+                name="category">
+          <option value="" hidden>Select category (skills, interests, locations)</option>
+          <option *ngFor="let category of categories"
+                  [value]="category.id"
+                  (click)="selectCategory(category.id)">{{category.name}}</option>
+        </select>
+        <div class="category-information">
+          <p class="information-text">Describes topic and people whoi should be interesred in this event</p>
+        </div>
+      </div>
+      <div class="form-group payment-group">
+        <label for="payment">Payment</label>
+        <ul>
+          <li *ngFor="let option of paymentOptions">
+            <input class="payment-input"
+                   type="radio"
+                   name="payment"
+                   formControlName="payment"
+                   value="{{option.value}}"
+                   (click)="setPaymentOption(option.is_paid)">
+            <p class="payment-description">{{option.name}}</p>
+          </li>
+        </ul>
+        <input *ngIf="showFee" 
+               class="number-hour-input"
+               type="text"
+               name="fee"
+               formControlName="fee"
+               placeholder="Fee"
+               value="fee">
+        <p *ngIf="showFee" class="additional-text">$</p>
+      </div>
+      <div class="form-group">
+        <label for="reward">Reward</label>          
+        <input id="reward"
+                class="form-control number-hour-input"
+                type="text"
+                formControlName="reward"
+                placeholder="Number">
+        <p class="additional-text">reward points for attendance</p>
+      </div>
+    </section>
+    <section class="form-section">
+      <h3 class="form-header">Coordinator</h3>
+      <div class="form-group increase-space"
+           [ngClass]="{'has-error': eventForm.controls['responsible'].errors.required && eventForm.controls['responsible'].touched}">
+        <label for="responsible">Responsible
+          <i class="fas fa-asterisk is-required"></i>
+        </label>
+        <select id="responsible"
+                class="form-control" 
+                name="responsible"
+                formControlName="responsible">
+          <option value="" hidden>Me - {{loggedinUser.name}} {{loggedinUser.lastname}}</option>
+          <optgroup class="optgroup"
+                    label="Me">
+            <option class="loggedinUser">
+              {{loggedinUser.name}} {{loggedinUser.lastname}}
+            </option>
+          </optgroup>
+          <optgroup class="optgroup"
+                    label="Others">
+            <option *ngFor="let employee of employees"
+                    [value]="employee.id">
+              {{employee.name}} {{employee.lastname}}
+            </option>
+          </optgroup>
+        </select>
+        <div *ngIf="eventForm.controls['responsible'].errors.required && eventForm.controls['responsible'].touched"
+              class="has-error-popup">
+          <p class="has-error-message">Responsible must be set</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>          
+        <input id="email"
+                class="form-control form-input"
+                type="email"
+                formControlName="email" 
+                placeholder="Email">
+      </div>
+    </section>
+    <section class="form-section when-section">
+      <h3 class="form-header">When</h3>
+      <div class="form-group increase-space"
+           [ngClass]="{'has-error': (!eventForm.controls['startsOn'].controls['date'].value && eventForm.controls['startsOn'].controls['date'].touched) || (!eventForm.controls['startsOn'].controls['time'].value && eventForm.controls['startsOn'].controls['time'].touched)}">
+        <label for="startsOn">Starts on
+          <i class="fas fa-asterisk is-required"></i>
+        </label>
+        <div formGroupName="startsOn"
+              class="starts-on-group">
+          <input id="date"
+                  class="form-control date-input" 
+                  type="date" 
+                  formControlName="date"
+                  placeholder="dd/mm/yyyy"
+                  required>
+          <p class="additional-text">at</p>
+          <input id="time"
+                  class="form-control number-hour-input"
+                  type="time" 
+                  formControlName="time"
+                  placeholder="--:--"
+                  min="01:00"
+                  max="12:59"
+                  required>
+          <ul>
+            <li *ngFor="let timeRange of timeRanges">
+              <input id="{{timeRange.value}}"
+                      class="time-range-input"
+                      type="radio"
+                      name="timeIndication"
+                      formControlName="timeIndication"
+                      value="{{timeRange.name}}">
+              <p class="time-indication-description">{{timeRange.name}}</p>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="(eventForm.controls['startsOn'].controls['date'].errors.required && eventForm.controls['startsOn'].controls['date'].touched) || (eventForm.controls['startsOn'].controls['time'].errors.required && eventForm.controls['startsOn'].controls['time'].touched)"
+              class="has-error-popup">
+          <p class="has-error-message">Date and time cannot be empty</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="duration">Duration</label>          
+        <input id="duration"
+                class="form-control number-hour-input"
+                type="text"
+                formControlName="duration"
+                placeholder="Number">
+        <p class="additional-text">hour</p>
+      </div>
+    </section>
+    
+    <div class="display-flex">
+      <button type="submit"
+              class="submit-button"
+              [ngClass]="{'is-disabled': !eventForm.valid}"
+              disabled="!eventForm.valid">Publish event</button>
+    </div>
+  </form>
+  <footer></footer>
+</div>
