@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
 import { EVENT_CONSTANTS } from './events.constants';
-import { Categories, Employee, PaymentOption, TimeRanges } from './events.interface';
+import { Categories, Coordinator, Employee, EventObject, FormDate, PaymentOption, TimeRanges } from './events.interface';
 import { EventsService} from './events.service';
 
 @Component({
@@ -14,41 +14,61 @@ import { EventsService} from './events.service';
 export class EventsComponent implements OnInit {
   eventForm: FormGroup;
   categories: Categories[];
-  selectedCategory: number;
   timeRanges: TimeRanges[];
   employees: Employee[];
   loggedinUser: Employee;
   paymentOptions: PaymentOption[];
-  showFee: boolean = false;
+  isPaid: boolean = false;
   addedSuccessfully: boolean = false;
+  minDate: string;
+  selectedCoordintor: Employee;
+  charactersNumber: number = 0;
 
   readonly FORM = EVENT_CONSTANTS.FORM;
   constructor(private formBuilder: FormBuilder,
               private eventsService: EventsService) {
   }
 
-  selectCategory(categoryId: number) {
-    this.selectedCategory = categoryId;
+  selectPaymentOption(selectedOption: boolean) {
+      this.isPaid = selectedOption;
   }
 
-  setPaymentOption(selectedOption: boolean) {
-      this.showFee = selectedOption;
+  countCharacters() {
+    this.charactersNumber = this.eventForm.get('eventDescription').value.length;
   }
 
   submitEvent(eventForm: FormGroup) {
-    console.log(eventForm, 'eventForm');
+    const fullEventDate: string = this.getEventDate(eventForm.value.startsOn);
+    const convertToSeconds: number = Math.floor(eventForm.value.duration * (60 * 60));
+    const coordinator: Employee = this.findCoordinator(eventForm.value.responsible);
+
     if(eventForm.valid) {
+      const createdEvent: EventObject = {
+        title: eventForm.value.title,
+        description: eventForm.value.eventDescription,
+        category_id: eventForm.value.category,
+        paid_event: this.isPaid,
+        event_fee: eventForm.value.fee ? eventForm.value.fee: null,
+        reward: eventForm.value.reward,
+        date: fullEventDate,
+        duration: convertToSeconds,
+        coordinator: {
+          email: coordinator.email,
+          id: coordinator.id.toString()
+        }
+      };
       this.addedSuccessfully = true;
+      console.log(createdEvent, 'createdEvent')
     }
   }
 
   ngOnInit() {
+    this.setEmployees();
     this.createEventForm();
     this.setCategories();
     this.setTimeRanges();
-    this.setEmployees();
     this.setPaymentOptions();
-    console.log(this.eventForm, 'this.eventForm');
+    this.setMinDate();
   }
 
   private createEventForm() {
@@ -59,8 +79,8 @@ export class EventsComponent implements OnInit {
       [this.FORM.PAYMENT.NAME]: [EVENT_CONSTANTS.FORM.PAYMENT.FREE_EVENT],
       [this.FORM.PAYMENT.FEE]: [''],
       [this.FORM.REWARD]: [''],
-      [this.FORM.RESPONSIBLE]: ['', Validators.required],
-      [this.FORM.EMAIL]: [''],
+      [this.FORM.RESPONSIBLE]: [this.loggedinUser.id, Validators.required],
+      [this.FORM.EMAIL]: ['', Validators.pattern(EVENT_CONSTANTS.REGEX_EMAIL_PATTERN)],
       [this.FORM.STARTS_ON.NAME]: this.formBuilder.group({
         [this.FORM.STARTS_ON.DATE]: ['', Validators.required],
         [this.FORM.STARTS_ON.TIME]: ['', Validators.required],
@@ -87,5 +107,30 @@ export class EventsComponent implements OnInit {
 
   private setPaymentOptions() {
     this.paymentOptions = this.eventsService.getPaymentOptions();
+  }
+
+  private setMinDate() {
+    this.minDate = moment().format('YYYY-MM-DD');
+  }
+
+  private getEventDate(formDate: FormDate): string {
+    const fullTime: string = formDate.time + ' ' + formDate.timeIndication;
+    const convertedTime: string = moment(fullTime, 'h:mm A').format('HH:mm');
+    const dateWithTime = formDate.date + ' ' + convertedTime;
+    const convertedDate: string = moment(dateWithTime).format('YYYY-MM-DDTHH:mm');
+
+    return convertedDate;
+  }
+
+  private findCoordinator(responsibleId: number): Employee {
+    const allEmployees: Employee[] = this.eventsService.getEmployees();
+
+    allEmployees.filter((employee: Employee) => {
+      if(employee.id == responsibleId) {
+        this.selectedCoordintor = employee;
+      }
+    });
+
+    return this.selectedCoordintor;
   }
 }

@@ -2,18 +2,19 @@
   <h1 class="container">New event</h1>
 </header>
 <div class="container">
-  <div *ngIf="!addedSuccessfully"
+  <div *ngIf="addedSuccessfully"
        class="confirmation-container">
     <h3 class="confirmation-header">Success</h3>
     <p class="confirmation-description">Event has been created.</p>
   </div>
   <form [formGroup]="eventForm" 
         class="row"
+        *ngIf="!addedSuccessfully"
         (ngSubmit)="submitEvent(eventForm)">
     <section class="form-section">
       <h3 class="form-header">About</h3>
       <div class="form-group increase-space"
-           [ngClass]="{'has-error': eventForm.controls['title'].errors.required && eventForm.controls['title'].touched}">
+           [ngClass]="{'has-error': eventForm.controls['title'].errors?.required && eventForm.controls['title'].touched}">
         <label for="title">Title
           <i class="fas fa-asterisk is-required"></i>
         </label>          
@@ -23,13 +24,13 @@
                 formControlName="title"
                 placeholder="Make it short and clear"
                 required>
-        <div *ngIf="eventForm.controls['title'].errors.required && eventForm.controls['title'].touched"
+        <div *ngIf="eventForm.controls['title'].errors?.required && eventForm.controls['title'].touched"
              class="has-error-popup">
           <p class="has-error-message">Title cannot be empty</p>
         </div>
       </div>
       <div class="form-group event-description-group"
-           [ngClass]="{'has-error': eventForm.controls['eventDescription'].errors.required && eventForm.controls['eventDescription'].touched}">
+           [ngClass]="{'has-error': eventForm.controls['eventDescription'].errors?.required && eventForm.controls['eventDescription'].touched}">
         <label for="eventDescription"
                 class="description-label">Description
           <i class="fas fa-asterisk is-required"></i>
@@ -40,14 +41,15 @@
                   maxlength="140"
                   rows="5"
                   cols="60"
+                  (keyup)="countCharacters()"
                   required></textarea>
-        <div *ngIf="eventForm.controls['eventDescription'].errors.required && eventForm.controls['eventDescription'].touched"
+        <div *ngIf="eventForm.controls['eventDescription'].errors?.required && eventForm.controls['eventDescription'].touched"
              class="has-error-popup">
           <p class="has-error-message">Description cannot be empty</p>
         </div>
         <div class="description-information">
           <p class="information-text">Max length 140 characters</p>
-          <p class="information-text">0/140</p>
+          <p class="information-text">{{charactersNumber}}/140</p>
         </div>
       </div>
       <div class="form-group">
@@ -59,8 +61,7 @@
                 name="category">
           <option value="" hidden>Select category (skills, interests, locations)</option>
           <option *ngFor="let category of categories"
-                  [value]="category.id"
-                  (click)="selectCategory(category.id)">{{category.name}}</option>
+                  [value]="category.id">{{category.name}}</option>
         </select>
         <div class="category-information">
           <p class="information-text">Describes topic and people whoi should be interesred in this event</p>
@@ -75,18 +76,18 @@
                    name="payment"
                    formControlName="payment"
                    value="{{option.value}}"
-                   (click)="setPaymentOption(option.is_paid)">
+                   (click)="selectPaymentOption(option.is_paid)">
             <p class="payment-description">{{option.name}}</p>
           </li>
         </ul>
-        <input *ngIf="showFee" 
+        <input *ngIf="isPaid" 
                class="number-hour-input"
                type="text"
                name="fee"
                formControlName="fee"
                placeholder="Fee"
                value="fee">
-        <p *ngIf="showFee" class="additional-text">$</p>
+        <p *ngIf="isPaid" class="additional-text">$</p>
       </div>
       <div class="form-group">
         <label for="reward">Reward</label>          
@@ -101,7 +102,7 @@
     <section class="form-section">
       <h3 class="form-header">Coordinator</h3>
       <div class="form-group increase-space"
-           [ngClass]="{'has-error': eventForm.controls['responsible'].errors.required && eventForm.controls['responsible'].touched}">
+           [ngClass]="{'has-error': eventForm.controls['responsible'].errors?.required && eventForm.controls['responsible'].touched}">
         <label for="responsible">Responsible
           <i class="fas fa-asterisk is-required"></i>
         </label>
@@ -109,7 +110,7 @@
                 class="form-control" 
                 name="responsible"
                 formControlName="responsible">
-          <option value="" hidden>Me - {{loggedinUser.name}} {{loggedinUser.lastname}}</option>
+          <option [value]="loggedinUser.id" hidden>Me - {{loggedinUser.name}} {{loggedinUser.lastname}}</option>
           <optgroup class="optgroup"
                     label="Me">
             <option class="loggedinUser">
@@ -124,18 +125,23 @@
             </option>
           </optgroup>
         </select>
-        <div *ngIf="eventForm.controls['responsible'].errors.required && eventForm.controls['responsible'].touched"
+        <div *ngIf="eventForm.controls['responsible'].errors?.required && eventForm.controls['responsible'].touched"
               class="has-error-popup">
           <p class="has-error-message">Responsible must be set</p>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group"
+           [ngClass]="{'has-error': eventForm.controls['email'].errors && eventForm.controls['email'].errors?.pattern}">
         <label for="email">Email</label>          
         <input id="email"
                 class="form-control form-input"
                 type="email"
                 formControlName="email" 
                 placeholder="Email">
+        <div *ngIf="eventForm.controls['email'].errors && eventForm.controls['email'].errors?.pattern"
+              class="has-error-popup">
+          <p class="has-error-message">Email is invalid</p>
+        </div>
       </div>
     </section>
     <section class="form-section when-section">
@@ -149,9 +155,9 @@
               class="starts-on-group">
           <input id="date"
                   class="form-control date-input" 
-                  type="date" 
+                  type="date"
+                  min="minDate"
                   formControlName="date"
-                  placeholder="dd/mm/yyyy"
                   required>
           <p class="additional-text">at</p>
           <input id="time"
@@ -174,7 +180,7 @@
             </li>
           </ul>
         </div>
-        <div *ngIf="(eventForm.controls['startsOn'].controls['date'].errors.required && eventForm.controls['startsOn'].controls['date'].touched) || (eventForm.controls['startsOn'].controls['time'].errors.required && eventForm.controls['startsOn'].controls['time'].touched)"
+        <div *ngIf="(eventForm.controls['startsOn'].controls['date'].errors?.required && eventForm.controls['startsOn'].controls['date'].touched) || (eventForm.controls['startsOn'].controls['time'].errors?.required && eventForm.controls['startsOn'].controls['time'].touched)"
               class="has-error-popup">
           <p class="has-error-message">Date and time cannot be empty</p>
         </div>
@@ -191,10 +197,12 @@
     </section>
     
     <div class="display-flex">
-      <button type="submit"
+        <button type="submit"
+        class="submit-button">Publish event</button>
+      <!-- <button type="submit"
               class="submit-button"
               [ngClass]="{'is-disabled': !eventForm.valid}"
-              disabled="!eventForm.valid">Publish event</button>
+              disabled="!eventForm.valid">Publish event</button> -->
     </div>
   </form>
   <footer></footer>

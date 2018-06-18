@@ -135,13 +135,13 @@ export class EventsService {
   getPaymentOptions(): PaymentOption[] {
     return [
       {
-        value: EVENT_CONSTANTS.FORM.PAYMENT.FREE_EVENT,
-        name: 'Free event',
+        value: EVENT_CONSTANTS.FORM.PAYMENT.FREE_EVENT.VALUE,
+        name: EVENT_CONSTANTS.FORM.PAYMENT.FREE_EVENT.NAME,
         is_paid: false
       },
       {
-        value: EVENT_CONSTANTS.FORM.PAYMENT.PAID_EVENT,
-        name: 'Paid event',
+        value: EVENT_CONSTANTS.FORM.PAYMENT.PAID_EVENT.VALUE,
+        name: EVENT_CONSTANTS.FORM.PAYMENT.PAID_EVENT.NAME,
         is_paid: true
       },
     ]

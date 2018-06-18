@@ -5,8 +5,14 @@ export const EVENT_CONSTANTS = {
     CATEGORY: 'category',
     PAYMENT: {
       NAME: 'payment',
-      FREE_EVENT: 'freeEvent',
-      PAID_EVENT: 'paidEvent',
+      FREE_EVENT: {
+        NAME: 'Free event',
+        VALUE: 'freeEvent'
+      },
+      PAID_EVENT: { 
+        NAME: 'Paid event',
+        VALUE: 'paidEvent'
+      },
       FEE: 'fee'
     },
     REWARD: 'reward',
@@ -45,5 +51,6 @@ export const EVENT_CONSTANTS = {
       NAME: 'PM',
       VALUE: 'pm'
     }
-  }
+  },
+  REGEX_EMAIL_PATTERN: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 };
