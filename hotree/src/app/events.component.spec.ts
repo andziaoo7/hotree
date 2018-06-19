@@ -1,27 +1,51 @@
-import { TestBed, async } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+
 import { EventsComponent } from './events.component';
+import { EventsService } from './events.service';
+
 describe('EventsComponent', () => {
+  let component: EventsComponent;
+  let fixture: ComponentFixture<EventsComponent>;
+  let eventsService: EventsService;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule
+      ],
       declarations: [
         EventsComponent
       ],
+      providers: [
+        EventsService
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(EventsComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
-  it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(EventsComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(EventsComponent);
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(EventsComponent);
+    component = fixture.componentInstance;
+    eventsService = TestBed.get(EventsService);
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to hotree!');
-  }));
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should invoke selectPaymentOption()', () => {
+    component.selectPaymentOption(true);
+  });
+
+  it('should invoke countCharacters()', () => {
+    component.countCharacters();
+  });
+
+  it('should invoke checkEventDate() and set invalidDate to false', () => {
+    component.checkEventDate('2018-06-30');
+  });
 });

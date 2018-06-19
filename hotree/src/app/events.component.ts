@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
 import { EVENT_CONSTANTS } from './events.constants';
-import { Categories, Coordinator, Employee, EventObject, FormDate, PaymentOption, TimeRanges } from './events.interface';
+import { Categories, Employee, EventObject, FormDate, PaymentOption, TimeRanges } from './events.interface';
 import { EventsService} from './events.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class EventsComponent implements OnInit {
   minDate: string;
   selectedCoordintor: Employee;
   charactersNumber: number = 0;
-
+  invalidDate: boolean = false;
   readonly FORM = EVENT_CONSTANTS.FORM;
   constructor(private formBuilder: FormBuilder,
               private eventsService: EventsService) {
@@ -35,6 +35,16 @@ export class EventsComponent implements OnInit {
 
   countCharacters() {
     this.charactersNumber = this.eventForm.get('eventDescription').value.length;
+  }
+
+  checkEventDate(date: string) {
+    const today: string = moment().format('YYYY-MM-DD');
+  
+    if(date < today) {
+      this.invalidDate = true;
+    } else {
+      this.invalidDate = false;
+    }
   }
 
   submitEvent(eventForm: FormGroup) {

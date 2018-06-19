@@ -147,7 +147,7 @@
     <section class="form-section when-section">
       <h3 class="form-header">When</h3>
       <div class="form-group increase-space"
-           [ngClass]="{'has-error': (!eventForm.controls['startsOn'].controls['date'].value && eventForm.controls['startsOn'].controls['date'].touched) || (!eventForm.controls['startsOn'].controls['time'].value && eventForm.controls['startsOn'].controls['time'].touched)}">
+           [ngClass]="{'has-error': (!eventForm.controls['startsOn'].controls['date'].value && eventForm.controls['startsOn'].controls['date'].touched) || (!eventForm.controls['startsOn'].controls['time'].value && eventForm.controls['startsOn'].controls['time'].touched) || invalidDate}">
         <label for="startsOn">Starts on
           <i class="fas fa-asterisk is-required"></i>
         </label>
@@ -158,6 +158,8 @@
                   type="date"
                   min="minDate"
                   formControlName="date"
+                  value
+                  (change)="checkEventDate($event.target.value)"
                   required>
           <p class="additional-text">at</p>
           <input id="time"
@@ -184,6 +186,10 @@
               class="has-error-popup">
           <p class="has-error-message">Date and time cannot be empty</p>
         </div>
+        <div *ngIf="invalidDate"
+             class="has-error-popup">
+          <p class="has-error-message">Event cannot be in the past</p>
+        </div>
       </div>
       <div class="form-group">
         <label for="duration">Duration</label>          
@@ -195,14 +201,10 @@
         <p class="additional-text">hour</p>
       </div>
     </section>
-    
     <div class="display-flex">
         <button type="submit"
-        class="submit-button">Publish event</button>
-      <!-- <button type="submit"
-              class="submit-button"
-              [ngClass]="{'is-disabled': !eventForm.valid}"
-              disabled="!eventForm.valid">Publish event</button> -->
+                class="submit-button"
+                [ngClass]="{'is-disabled': !eventForm.valid}">Publish event</button>
     </div>
   </form>
   <footer></footer>

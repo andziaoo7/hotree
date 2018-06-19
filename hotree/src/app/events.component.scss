@@ -1,231 +1,234 @@
+$white-color: #ffffff;
+$main-color: #355990;
+$box-shadow-color: #efefef;
+$border-color: #a9a9a9;
+$error-color: #f39fb6;
+$valid-button-color: #ff8e1d;
+$not-valid-submit-button: #ffc994;
+$spacing: 20px;
+@mixin background($background-color) {
+  background-color: $background-color;
+  padding: $spacing $spacing * 2;
+  margin: 20px;
+  box-shadow: 0px 0px 2.5px 2.5px $box-shadow-color;
+}
+@mixin content($margin, $border) {
+  content: "";
+  margin-top: $margin;
+  border: $border;
+}
+
 .header {
-    padding: 20px 0;
-    background-color: #355990;
-    color: #ffffff;
-    h1 {
-      padding-left: 40px;
-    }
+  padding: $spacing 0;
+  background-color: $main-color;
+  color: $white-color;
+  h1 {
+    padding-left: $spacing * 2;
+  }
 }
 .container {
-    width: 900px;
-    margin: 0 auto;
-    .confirmation-container {
-      background-color: #f0fcf3;
-      padding: 20px 40px;
-      margin: 20px;
-      box-shadow: 0px 0px 2.5px 2.5px #efefef;
-      .confirmation-header {
-        color: #b1deb5;
-        margin-top: 0;
-      }
-      .confirmation-description {
-        margin: 0;
-      }
+  width: 900px;
+  margin: 0 auto;
+  .confirmation-container {
+    @include background(#f0fcf3);
+    .confirmation-header {
+      color: #b1deb5;
+      margin-top: 0;
     }
-    .form-section {
-      background-color: #ffffff;
-      padding: 20px 40px;
-      margin: 20px;
-      box-shadow: 0px 0px 2.5px 2.5px #efefef;
-      .form-header {
-        margin-top: 0;
-        margin-bottom: 10px;
-      }
-      .form-header,
-      .form-group label {
-        color: #355990;
-      }
-      .form-header::after {
-        content: ' ';
-        display: block;
-        border: 0.5px solid #a9a9a9;
-        margin-top: 10px;
-      }
-  
-      .form-group {
-        margin: 15px 0;
-        label {
-          display: inline-block;
-          width: 120px;
-          text-transform: uppercase;
-          font-size: 14px;
-          .is-required {
-            font-size: 5px;
-            vertical-align: super;
-            color: tomato;
-          }
-        }
-        input,
-        select {
-          padding: 10px;
-        }
-        select:focus { 
-          outline: 0;
-        }
-        input::-webkit-input-placeholder,
-        .optgroup::-webkit-input-placeholder {
-          color: #a9a9a9;
-          option {
-            color: black;
-          }
-        }
-        .optgroup,
-        option {
-          background-color: #f0f0f0;
-          border: none;
-        }
-        .form-input,
-        select {
-          width: 450px;
-          height: 40px;
-          // padding-left: 10px;
-          .loggedinUser::before {
-            content: '<i class="fas fa-check"></i>'
-          }
-        }
-        .payment-input,
-        .time-range-input {
-          width: auto;
-        }
-        .description-label {
-          vertical-align: top;
-          padding-top: 5px;
-        }
-        textarea {
-          resize: none;
-          width: 450px;
-          height: 100px;
-          padding-left: 10px;
-          padding-top: 5px;
-          font-family: 'Roboto', sans-serif;
-          font-size: 13.7px;
-        }
-        .additional-text {
-          display: inline-block;
-          padding-left: 15px;
-          padding-right: 15px;
-        }
-        .information-text {
-          font-style: italic;
-          font-size: 10px;
-          padding: 0;
-          color: #a9a9a9;
-          display: inline-block;
-        }
-        .description-information,
-        .category-information {
-          margin-left: 120px;
-          width: 450px;
-        }
-        .description-information {
-          position: relative;
-          .information-text:last-child {
-            float: right;
-            padding-right: 2px;
-          }
-        }
-        .date-input {
-          width: 150px;
-          // height: 30px;
-          // padding-left: 10px;
-        }
-        .number-hour-input {
-          width: 90px;
-          // height: 30px;
-          // padding-left: 10px;
-        }
-      }
-      .payment-description,
-      .time-indication-description {
-        display: inline-block;
-        margin-right: 15px;
-      }
-      .increase-space {
-        padding-top: 10px;
-      }
-      .payment-group,
-      .starts-on-group {
-         ul {
-          display: inline-block;
-          padding-left: 0;
-          margin: 0;
-          li {
-            list-style-type: none;
-            display: inline-block;
-          }
-        }
-      }
-      .has-error {
-        label,
-        input {
-          color: #f39fb6;
-        }
-        input {
-          border-style: solid;
-          border-color: #f39fb6;
-        }
-        textarea {
-          border-color: #f39fb6;
-        }
-        .has-error-popup {
-          color: #ffffff;
-          width: 170px;
-          background-color: #f39fb6;
-          text-align: center;
-          display: inline-block;
-          padding: 5px;
-          margin-left: 20px;
-          border-radius: 5px;
-          position: relative;
-          .has-error-message {
-            margin: 0;
-          }
-          ::after {
-            content: "";
-            position: absolute;
-            right: 100%;
-            top: 50%;
-            margin-top: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent #f39fb6 transparent transparent;
-          } 
-        }
-      }
-      .event-description-group {
-        .has-error-popup {
-          vertical-align: top;
-          padding-top: 5px;
-        }
-      }
+    .confirmation-description {
+      margin: 0;
     }
-    .when-section .increase-space {
-      .starts-on-group {
-        display: inline-block;
-      }
-      .number-hour-input {
-        margin-right: 10px;
-      }
+  }
+  .form-section {
+    @include background($white-color);
+    .form-header {
+      margin-top: 0;
+      margin-bottom: $spacing / 2;
+    }
+    .form-header,
+    .form-group label {
+      color: $main-color;
+    }
+    .form-header::after {
+      @include content($spacing / 2, 1px solid $border-color);
+      display: block;
     }
 
-    .display-flex {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 20px 0;
-      .submit-button {
-        background-color: #ff8e1d;
-        border-color: #ff8e1d;
-        padding: 15px 40px;
-        border-style: solid;
-        color: #ffffff; //make mixin
+    .form-group {
+      margin: 15px 0;
+      label {
+        display: inline-block;
+        width: $spacing * 6;
         text-transform: uppercase;
-        cursor: pointer;
+        font-size: 14px;
+        .is-required {
+          font-size: 5px;
+          vertical-align: super;
+          color: tomato;
+        }
       }
-      .is-disabled {
-        background-color: #ffc994;
-        border-color: #ffc994;
-        pointer-events: none;
+      input,
+      select {
+        padding: $spacing / 2;
+      }
+      select:focus { 
+        outline: 0;
+      }
+      input::-webkit-input-placeholder,
+      .optgroup::-webkit-input-placeholder {
+        color: $border-color;
+        option {
+          color: black;
+        }
+      }
+      .optgroup,
+      option {
+        background-color: #f0f0f0;
+        border: none;
+      }
+      .form-input,
+      select {
+        width: 450px;
+        height: $spacing * 2;
+        .loggedinUser::before {
+          content: '<i class="fas fa-check"></i>'
+        }
+      }
+      .payment-input,
+      .time-range-input {
+        width: auto;
+      }
+      .description-label {
+        vertical-align: top;
+        padding-top: 5px;
+      }
+      textarea {
+        resize: none;
+        width: 450px;
+        height: $spacing * 5;
+        padding-left: $spacing / 2;
+        padding-top: 5px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13.7px;
+      }
+      .additional-text {
+        display: inline-block;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .information-text {
+        font-style: italic;
+        font-size: $spacing / 2;
+        padding: 0;
+        color: $border-color;
+        display: inline-block;
+      }
+      .description-information,
+      .category-information {
+        margin-left: $spacing * 6;
+        width: 450px;
+      }
+      .description-information {
+        position: relative;
+        .information-text:last-child {
+          float: right;
+          padding-right: $spacing / 10;
+        }
+      }
+      .date-input {
+        width: 150px;
+      }
+      .number-hour-input {
+        width: 90px;
       }
     }
+    .payment-description,
+    .time-indication-description {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    .increase-space {
+      padding-top: $spacing / 2;
+    }
+    .payment-group,
+    .starts-on-group {
+      ul {
+        display: inline-block;
+        padding-left: 0;
+        margin: 0;
+        li {
+          list-style-type: none;
+          display: inline-block;
+        }
+      }
+    }
+    .has-error {
+      label,
+      input {
+        color: $error-color;
+      }
+      input {
+        border-style: solid;
+        border-color: $error-color;
+      }
+      textarea {
+        border-color: $error-color;
+      }
+      .has-error-popup {
+        color: $white-color;
+        width: 170px;
+        background-color: $error-color;
+        text-align: center;
+        display: inline-block;
+        padding: 5px;
+        margin-left: $spacing;
+        border-radius: 5px;
+        position: relative;
+        .has-error-message {
+          margin: 0;
+        }
+        ::after {
+          @include content(-5px, 5px solid transparent $error-color transparent transparent);
+          position: absolute;
+          right: 100%;
+          top: 50%;
+        } 
+      }
+    }
+    .event-description-group {
+      .has-error-popup {
+        vertical-align: top;
+        padding-top: 5px;
+      }
+    }
+  }
+  .when-section .increase-space {
+    .starts-on-group {
+      display: inline-block;
+      margin-right: 38px;
+    }
+    .number-hour-input {
+      margin-right: $spacing / 2;
+    }
+  }
+  .display-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: $spacing 0;
+    .submit-button {
+      background-color: $valid-button-color;
+      border-color: $valid-button-color;
+      padding: 15px $spacing * 2;
+      border-style: solid;
+      color: $white-color;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .is-disabled {
+      background-color: $not-valid-submit-button;
+      border-color: $not-valid-submit-button;
+      pointer-events: none;
+    }
+  }
 }

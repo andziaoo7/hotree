@@ -24,8 +24,8 @@ export interface EventObject {
   paid_event: boolean;
   event_fee: number;
   reward: number;
-  date: string; //YYYY-MM-DDTHH:mm 2018-01-19T15:15
-  duration: number; //in seconds
+  date: string;
+  duration: number;
   coordinator: Coordinator;
 }
 
