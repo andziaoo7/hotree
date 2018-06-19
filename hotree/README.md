@@ -2,26 +2,17 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
-## Development server
+Setup project - using git:
+1. Clone repository: https://github.com/andziaoo7/hotree.git
+2. Go into created folder, click to another one hotree folder, than open your terminal (or you can do it directly from terminal) and type 'npm install'
+3. After packages were installed you can type 'ng serve' to run application. 
+4. Navigate to localhost:4200
+5. You can now check my work :)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Setup project - using zipped repository:
+1. Extract files and go into first hotree folder
+2. Open here your terminal and run 'npm install'
+3. Follow steps 3-5 from 'Setup project - using git' instruction.
 
-## Code scaffolding
+P.S. I'm sorry for my CSS/SASS skills.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
